@@ -60,3 +60,20 @@ func (c *Clusterclient) Get(key string) (string, error) {
 	}
 	return res, nil
 }
+
+// Close returns the value for the given key.
+func (c *Clusterclient) Close() {
+	err := c.clusterclient.Close()
+	if err != nil {
+		fmt.Println(fmt.Sprintf("error close connection %v", err))
+	}
+}
+
+// Clientinfo returns the Client info.
+func (c *Clusterclient) Clientinfo() (string, error) {
+	res, err := c.clusterclient.ClusterInfo().Result()
+	if err != nil {
+		return "", err
+	}
+	return res, nil
+}
