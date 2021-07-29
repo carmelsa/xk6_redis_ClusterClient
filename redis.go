@@ -94,3 +94,11 @@ func (c *Clusterclient) Getdo(key string) (string, error) {
 	}
 	return fmt.Sprintf("%v", res), nil
 }
+
+// Setnx the given key with the given value and expiration time.
+func (c *Clusterclient) Setnx(key, value string, exp time.Duration) {
+	_, err := c.clusterclient.SetNX(key, value, exp).Result()
+	if err != nil {
+		fmt.Println(fmt.Sprintf("error seting key %v", err))
+	}
+}
