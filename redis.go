@@ -3,7 +3,7 @@ package rediscluster
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"go.k6.io/k6/js/common"
 	"go.k6.io/k6/js/modules"
 	"time"
@@ -38,7 +38,7 @@ func (r *Redis) XClient(ctxPtr *context.Context, server string, max int, timeout
 }
 
 func (c *Clusterclient) Flushall() {
-	_, err := c.clusterclient.FlushAll().Result()
+	_, err := c.clusterclient.FlushAll(c.clusterclient.Context()).Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error flush all data %v", err))
 	}
@@ -46,7 +46,7 @@ func (c *Clusterclient) Flushall() {
 
 // Set the given key with the given value and expiration time.
 func (c *Clusterclient) Set(key, value string, exp time.Duration) {
-	_, err := c.clusterclient.Set(key, value, exp).Result()
+	_, err := c.clusterclient.Set(c.clusterclient.Context(), key, value, exp).Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))
 	}
@@ -54,7 +54,7 @@ func (c *Clusterclient) Set(key, value string, exp time.Duration) {
 
 // Get returns the value for the given key.
 func (c *Clusterclient) Get(key string) (string, error) {
-	res, err := c.clusterclient.Get(key).Result()
+	res, err := c.clusterclient.Get(c.clusterclient.Context(), key).Result()
 	if err != nil {
 		return "", err
 	}
@@ -71,7 +71,7 @@ func (c *Clusterclient) Close() {
 
 // Clientinfo returns the Client info.
 func (c *Clusterclient) Clientinfo() (string, error) {
-	res, err := c.clusterclient.ClusterInfo().Result()
+	res, err := c.clusterclient.ClusterInfo(c.clusterclient.Context()).Result()
 	if err != nil {
 		return "", err
 	}
@@ -80,7 +80,7 @@ func (c *Clusterclient) Clientinfo() (string, error) {
 
 // Setdo the given key with the given value and expiration time.
 func (c *Clusterclient) Setdo(key, value string, exp time.Duration) {
-	_, err := c.clusterclient.Do("SET", key, value, exp).Result()
+	_, err := c.clusterclient.Do(c.clusterclient.Context(), "SET", key, value, exp).Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))
 	}
@@ -88,7 +88,7 @@ func (c *Clusterclient) Setdo(key, value string, exp time.Duration) {
 
 // Getdo returns the value for the given key.
 func (c *Clusterclient) Getdo(key string) (string, error) {
-	res, err := c.clusterclient.Do("GET", key).Result()
+	res, err := c.clusterclient.Do(c.clusterclient.Context(), "GET", key).Result()
 	if err != nil {
 		return "", err
 	}
@@ -97,7 +97,7 @@ func (c *Clusterclient) Getdo(key string) (string, error) {
 
 // Setnx the given key with the given value and expiration time.
 func (c *Clusterclient) Setnx(key, value string, exp time.Duration) {
-	_, err := c.clusterclient.SetNX(key, value, exp).Result()
+	_, err := c.clusterclient.SetNX(c.clusterclient.Context(), key, value, exp).Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))
 	}
