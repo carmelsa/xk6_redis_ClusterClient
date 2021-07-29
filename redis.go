@@ -77,3 +77,20 @@ func (c *Clusterclient) Clientinfo() (string, error) {
 	}
 	return res, nil
 }
+
+// Setdo the given key with the given value and expiration time.
+func (c *Clusterclient) Setdo(key, value string, exp time.Duration) {
+	_, err := c.clusterclient.Do("SET", key, value, exp).Result()
+	if err != nil {
+		fmt.Println(fmt.Sprintf("error seting key %v", err))
+	}
+}
+
+// Getdo returns the value for the given key.
+func (c *Clusterclient) Getdo(key string) (string, error) {
+	res, err := c.clusterclient.Do("GET", key).Result()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%v", res), nil
+}
