@@ -29,9 +29,9 @@ type Clusterclient struct {
 
 // XClient represents the Cluster client constructor (i.e. `new redis.ClusterClient()`) and
 // returns a new Redis Cluster client object.
-func (r *Redis) XClient(ctxPtr *context.Context, server string, max int, timeout int) interface{} {
+func (r *Redis) XClient(ctxPtr *context.Context, server string, max int, timeout int, maxRetries int) interface{} {
 	servers := []string{server}
-	opts := &redis.ClusterOptions{Addrs: servers, PoolTimeout: time.Duration(timeout), PoolSize: max}
+	opts := &redis.ClusterOptions{Addrs: servers, PoolTimeout: time.Duration(timeout), PoolSize: max, MaxRetries: maxRetries}
 	rt := common.GetRuntime(*ctxPtr)
 	ClusterClient := Clusterclient{clusterclient: redis.NewClusterClient(opts)}
 	return common.Bind(rt, &ClusterClient, ctxPtr)
