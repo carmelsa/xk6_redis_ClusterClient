@@ -45,8 +45,9 @@ func (c *Clusterclient) Flushall() {
 }
 
 // Set the given key with the given value and expiration time.
-func (c *Clusterclient) Set(key, value string, exp time.Duration) {
-	_, err := c.clusterclient.Set(c.clusterclient.Context(), key, value, exp).Result()
+func (c *Clusterclient) Set(key, value string, exp int) {
+	expiration := time.Duration(exp) * time.Millisecond
+	_, err := c.clusterclient.Set(c.clusterclient.Context(), key, value, expiration).Result()
 	if err != nil {
 		fmt.Println(fmt.Sprintf("error seting key %v", err))
 	}
